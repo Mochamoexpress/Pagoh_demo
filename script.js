@@ -10,7 +10,7 @@ Cesium.Ion.defaultAccessToken =
 
   try {
     // --- Load your LiDAR point cloud ---
-    const tileset = await Cesium.Cesium3DTileset.fromIonAssetId(3953107);
+    const tileset = await Cesium.Cesium3DTileset.fromIonAssetId(3943520);
     viewer.scene.primitives.add(tileset);
     await tileset.readyPromise;
     await viewer.zoomTo(tileset);
@@ -32,22 +32,18 @@ Cesium.Ion.defaultAccessToken =
     });
 
     tileset.style = new Cesium.Cesium3DTileStyle({
-      pointSize: 2,
+      pointSize: 2.0,
     });
 
     // --- Orbit parameters ---
-    const centerLat = 2.137294621759021; // Your specified point (latitude)
-    const centerLon = 102.72294134825354; // Your specified point (longitude)
-    const centerHeight = 40; // meters above ground center
-    const orbitRadius = 150; // meters
-    const orbitHeight = 40; // camera height above center
-    const orbitSpeed = 0.01; // radians per frame
+    const centerLat = 2.133667186194407;  // Your specified point (latitude)
+    const centerLon = 102.7304773498414;  // Your specified point (longitude)
+    const centerHeight = 20;   // meters above ground center
+    const orbitRadius = 120;   // meters
+    const orbitHeight = 60;    // camera height above center
+    const orbitSpeed = 0.01;   // radians per frame
 
-    const center = Cesium.Cartesian3.fromDegrees(
-      centerLon,
-      centerLat,
-      centerHeight
-    );
+    const center = Cesium.Cartesian3.fromDegrees(centerLon, centerLat, centerHeight);
     let angle = 0;
 
     viewer.scene.postRender.addEventListener(() => {
@@ -57,21 +53,16 @@ Cesium.Ion.defaultAccessToken =
       const offsetX = orbitRadius * Math.cos(angle);
       const offsetY = orbitRadius * Math.sin(angle);
 
-      const cameraLon = centerLon + offsetX / 111320;
-      const cameraLat =
-        centerLat + offsetY / (111320 * Math.cos((centerLat * Math.PI) / 180));
+      const cameraLon = centerLon + (offsetX / 111320);
+      const cameraLat = centerLat + (offsetY / (111320 * Math.cos(centerLat * Math.PI / 180)));
       const cameraHeight = centerHeight + orbitHeight;
 
-      const position = Cesium.Cartesian3.fromDegrees(
-        cameraLon,
-        cameraLat,
-        cameraHeight
-      );
+      const position = Cesium.Cartesian3.fromDegrees(cameraLon, cameraLat, cameraHeight);
 
       // Calculate direction FROM camera TO center for correct heading
       const dx = centerLon - cameraLon;
       const dy = centerLat - cameraLat;
-      const heading = Math.atan2(dx, dy); // Note: atan2(dx, dy) for proper heading
+      const heading = Math.atan2(dx, dy);  // Note: atan2(dx, dy) for proper heading
 
       // Pitch slightly downward to look at the center point
       const pitch = Cesium.Math.toRadians(-15);
